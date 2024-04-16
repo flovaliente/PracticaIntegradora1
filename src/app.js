@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import productsRouter from './routers/productsRouter.js';
 import cartRouter from './routers/cartRouter.js'
 import indexRouter from './routers/indexRouter.js';
+import chatRouter from './routers/messageRouter.js';
 
 
 import { __dirname } from './utils.js';
@@ -31,6 +32,7 @@ app.get('/', indexRouter);
 app.get('/realTimeProducts', indexRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
+app.use('/api/message', chatRouter);
 
 app.use((error, req, res, next) => {
   const message = `Ocurrio un error: ${error.message}`;

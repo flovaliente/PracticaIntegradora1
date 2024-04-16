@@ -1,10 +1,11 @@
 import cartModel from './models/cartModel.js';
+import productModel from './models/productModel.js';
 
 class CartManagerDB {
     
     async createCart(){
         try {
-            const result = await cartModel.create();
+            let result = await cartModel.create({ products: [] });
             console.log(`Cart created successfully.`);
             return result;
         } catch (error) {
@@ -13,10 +14,10 @@ class CartManagerDB {
         }
     }
 
-    async addToCart(cid, pid, quantity){
+    async addToCart(cid, pid, quantity = 1){
         const cart = await cartModel.findOne({ _id: cid });//Obtengo el carrito con id cid
         if(!cart){
-            throw new Error(`The cart with id: ${cid} do not exist 😩`);
+            throw new Error(`Cart with id: ${cid} do not exist.`);
         }
         //console.log('Cart:', cart);
         const productFind = cart.products.find( (cartProduct) => String(cartProduct.productId) === String(pid) );
@@ -53,7 +54,22 @@ class CartManagerDB {
     }
 
     async updateCart(cid, pid){
-        
+        try {
+            let cart = await cartModel.findOne({ _id: cid });
+            let product = await productModel.findOne({ _id: pid });
+
+            if(!cart){//No existe el carrito
+                throw new Error(`Cart with id: ${cid} do not exist.`);
+            }
+
+            if(!product){//No existe el producto
+                throw new Error(`Product with id: ${pid} do not exist.`);
+            }
+
+            return 
+        } catch (error) {
+            throw new Error(`Error updating cart.`)
+        }
     }
 
     async updateQuantityCart(cid, pid){
@@ -67,16 +83,25 @@ class CartManagerDB {
             if(result.deletedCount === 0){
                 throw new Error(`Cart with id: ${cid} do not exist.`);
             }else{
-              console.log(`Cart with id: ${cid} deleted successfully.`);  
+              console.error(`Cart with id: ${cid} deleted successfully.`);  
             }
 
             return result;
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             throw new Error(`Error deleting cart ${cid}.`);
         }
         
 
+    }
+
+    async deleteProdFromCart(cid, pid){
+        try {
+            return await cartModel.findOneAndUpdate({ _id: cid }, { $pull: { products: { productId: pid } }});
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(`Error deleting product from cart.`);
+        }
     }
 }
 

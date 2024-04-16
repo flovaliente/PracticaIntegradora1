@@ -1,3 +1,5 @@
+(function () {
+
 // Inicializo socket del lado del cliente
 const socket = io();
 
@@ -8,16 +10,16 @@ let messagesLogs = document.querySelector('#messagesLogs');
 Swal.fire({
     title: "Identificate",
     input: "text",
-    inputLabel: "Ingresa tu usuario",
-    allowOutsideClick: false,
+    text: "Ingresa el usuario",
     inputValidator: (value) => {
       return !value && "Es necesario que te identifiques para continuar!";
     },
-}).then((result) => {
+    allowOutsideClick: false
+}).then(result => {
     username = result.value;
     console.log(`Hola ${username} bienvenido`);
 
-    socket.emit("userConnect", user);
+    socket.emit("userConnect", username);
 });
 
 
@@ -27,7 +29,7 @@ chatBox.addEventListener("keypress", e =>{
             console.log(`Mensaje: ${chatBox.value}`);
 
             socket.emit("message", {
-                user,
+                username,
                 message: chatBox.value
             });
 
@@ -40,7 +42,7 @@ socket.on("messagesLogs", data =>{
     let messages = "";
 
     data.forEach(chat => {
-        messages += `${chat.user}: ${chat.message} </br>`;
+        messages += `${chat.username}: ${chat.message} </br>`;
     });
 
     messagesLogs.innerHTML = messages;
@@ -53,3 +55,5 @@ socket.on("newUser", data =>{
         position: "top-right"
     });
 });
+
+})();

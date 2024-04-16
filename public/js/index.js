@@ -37,7 +37,7 @@
             <p>${product.description}</p>
             <p>$ ${product.price}</p>
             <p>Stock: ${product.stock}</p>
-            <p id='idProduct'>Id: ${product.id}</p>`;
+            <p id='idProduct'>Id: ${product._id}</p>`;
             listaProd.appendChild(productElement);
         });
     });

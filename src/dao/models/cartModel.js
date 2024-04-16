@@ -14,7 +14,7 @@ const Products = new Schema(
 );
 
 const cartSchema = new mongoose.Schema({
-    products: { type: [Products], required: true, default: [] }
+    products: { type: [Products], default: [] }
 }, { timestamps: true }); //incluye fecha y hora de creacion
 
 export default mongoose.model(cartCollection, cartSchema);
